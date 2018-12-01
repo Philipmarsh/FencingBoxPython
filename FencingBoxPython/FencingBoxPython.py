@@ -22,11 +22,19 @@ green_allowed = True
 def reset_green():
     global green_allowed
     canvas.delete(window.greenbox)
+    try:
+      canvas.delete(window.redbox)
+    except: 
+      print("doesnt exist")
     green_allowed = True
 
 def reset_red():
     global red_allowed
     canvas.delete(window.redbox)
+    try:
+      canvas.delete(window.greenbox)
+    except: 
+      print("doesnt exist")
     red_allowed = True
 
 #defining the grounding wires
@@ -80,7 +88,7 @@ def double_search_red():
    def greenhit(r):
        global xgrounding
        global green_allowed
-       if xgrounding == False and green_hit == True :
+       if xgrounding == False and green_allowed == True :
            green_allowed = False
            nonlocal timer1
            timer2 = time.time()
