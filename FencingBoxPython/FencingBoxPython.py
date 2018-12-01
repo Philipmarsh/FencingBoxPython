@@ -15,7 +15,35 @@ txt = canvas.create_text(330, 330, text="Green", font="Arial 16", fill="green")
 txt1 = canvas.create_text(1190, 330, text="Red", font="Arial 16", fill="red")
 canvas.pack()
 
+#defining the grounding wires
+#These can set booleans that then get checked before running other functions for the fencing box.
+xgrounding = False
+zgrounding = False
 
+def xground(event):
+    global xgrounding
+    xgrounding = True
+    print(xgrounding)
+
+def xgroundfinish(event):
+    global xgrounding
+    xgrounding = False
+    print(xgrounding)
+
+def zground(event):
+    global zgrounding
+    zgrounding = True
+    print(zgrounding)
+
+def zgroundfinish(event):
+    global zgrounding
+    zgrounding = False
+    print(zgrounding)
+
+canvas.bind('<x>', xground )
+canvas.bind('<z>', zground)
+canvas.bind('<KeyRelease-x>', xgroundfinish)
+canvas.bind('<KeyRelease-z>', zgroundfinish)
 #This section defines the menu bar
 menubar = Menu(window)
 
