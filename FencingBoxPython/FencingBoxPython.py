@@ -14,16 +14,31 @@ line1 = canvas.create_line(760, 0, 760, 500)
 txt = canvas.create_text(330, 330, text="Green", font="Arial 16", fill="green")
 txt1 = canvas.create_text(1190, 330, text="Red", font="Arial 16", fill="red")
 canvas.pack()
+#To make the red and green lights not break the program, use the same logic for the grounding wires, ie bool 
+#to be true or false. then use an after function to allow the bool to change back and the button to be pressed again
+red_allowed = True
+green_allowed = True
+
+def reset_green():
+    global green_allowed
+    canvas.delete(window.greenbox)
+    green_allowed = True
+
+def reset_red():
+    global red_allowed
+    canvas.delete(window.redbox)
+    red_allowed = True
 
 #defining the grounding wires
-#These can set booleans that then get checked before running other functions for the fencing box.
 xgrounding = False
 zgrounding = False
 
 def xground(event):
     global xgrounding
-    xgrounding = True
-    print(xgrounding)
+    if xgrounding == False:
+        xgrounding = True
+        print(xgrounding)
+    else: return
 
 def xgroundfinish(event):
     global xgrounding
@@ -32,9 +47,10 @@ def xgroundfinish(event):
 
 def zground(event):
     global zgrounding
-    zgrounding = True
-    print(zgrounding)
-
+    if zgrounding == False:
+        zgrounding = True
+        print(zgrounding)
+    else: return
 def zgroundfinish(event):
     global zgrounding
     zgrounding = False
@@ -62,47 +78,51 @@ def double_search_red():
 
    timer1 = time.time()
    def greenhit(r):
-       nonlocal timer1
-       timer2 = time.time()
-       time_elapsed = timer2 - timer1
+       global xgrounding
+       global green_allowed
+       if xgrounding == False and green_hit == True :
+           green_allowed = False
+           nonlocal timer1
+           timer2 = time.time()
+           time_elapsed = timer2 - timer1
        
-       if time_elapsed <= 0.125:
-           print(time_elapsed)
-           window.greenbox = canvas.create_rectangle(0, 0, 760, 500, fill="green")
-           window.update_idletasks()
-           canvas.after(1000, canvas.delete(window.greenbox))
-           canvas.bind('<g>', green)
+           if time_elapsed <= 0.125:
+               green_allowed = False
+               print(time_elapsed)
+               window.greenbox = canvas.create_rectangle(0, 0, 760, 500, fill="green")
+               window.update_idletasks()
+               canvas.after(1000, reset_green)
+               canvas.bind('<g>', green)
+       else: return
        
    canvas.after(1000, set_g) 
    canvas.bind('<g>', greenhit)
 def set_r():
     canvas.bind('<r>', red)
 def double_search_green():
-   #i = 0
+   
    timer1 = time.time()
 
-   #def counter():
-   #   def num():
-   #        nonlocal i
-   #        i +=1
-
-   #    nonlocal i
-   #    while i <126:
-   #        canvas.after(1, num)
-   #        print(i)
+  
 
    def redhit(r):
-       nonlocal timer1
-       timer2 = time.time()
-       time_elapsed = timer2 - timer1
+       global zgrounding
+       global red_allowed
+       if zgrounding == False and red_allowed == True:
+           red_allowed = False
+           nonlocal timer1
+           timer2 = time.time()
+           time_elapsed = timer2 - timer1
        
        
-       if time_elapsed <= 0.125:
-           print(time_elapsed)
-           window.redbox = canvas.create_rectangle(760, 0, 1520, 500, fill="red")
-           window.update_idletasks()
-           canvas.after(1000, canvas.delete(window.redbox))
-           canvas.bind('<r>', red)
+           if time_elapsed <= 0.125:
+               print(time_elapsed)
+               window.redbox = canvas.create_rectangle(760, 0, 1520, 500, fill="red")
+               window.update_idletasks()
+               canvas.after(1000, reset_red)
+               canvas.bind('<r>', red)
+       else: return
+        
        
    canvas.after(1000, set_r) 
    canvas.bind('<r>', redhit)
@@ -111,6 +131,10 @@ def double_search_green():
 
 
 def red(event):
+
+    global zgrounding
+    global red_allowed
+
     def redlight():
 
         window.redbox = canvas.create_rectangle(760, 0, 1520, 500, fill="red")
@@ -118,48 +142,60 @@ def red(event):
         touche = event.keysym
         print(touche)
         winsound.Beep(5000, 1000)
-        canvas.after(500, canvas.delete(window.redbox))
-    t = threading.Thread(target=double_search_red, name='thread1')
-    t1 = threading.Thread(target=redlight, name='thread2')
-    t.start()
-    t1.start()
-    window.update_idletasks()
+        canvas.after(1000, reset_red)
+    if zgrounding == False and red_allowed == True:
+        red_allowed = False
+        t = threading.Thread(target=double_search_red, name='thread1')
+        t1 = threading.Thread(target=redlight, name='thread2')
+        t.start()
+        t1.start()
+        window.update_idletasks()
 
 
 
-    global running
-    if running:
-        running = False
-        start['state'] = 'normal'
-        stop['state'] = 'disabled'
-        Reset['state'] = 'normal'
+        global running
+        if running:
+            running = False
+            start['state'] = 'normal'
+            stop['state'] = 'disabled'
+            Reset['state'] = 'normal'
+        else:
+            print("The timer was not running")
+
     else:
-        print("The timer was not running")
-def green(event):
+        return
 
-    
+
+     
+def green(event):
+    global green_allowed
+    global xgrounding
     def greenlight():
         window.greenbox = canvas.create_rectangle(0, 0, 760, 500, fill="green")
         window.update_idletasks()
         touche = event.keysym
         print(touche)
         winsound.Beep(5000, 1000)
-        canvas.after(1000, canvas.delete(window.greenbox))
-    t2 = threading.Thread(target=double_search_green, name='thread1')
-    t3 = threading.Thread(target=greenlight, name='thread2')
-    t2.start()
-    t3.start()
-    window.update_idletasks()
+        canvas.after(1000, reset_green)
+    if xgrounding == False and green_allowed == True:
+        green_allowed = False
+        t2 = threading.Thread(target=double_search_green, name='thread1')
+        t3 = threading.Thread(target=greenlight, name='thread2')
+        t2.start()
+        t3.start()
+        window.update_idletasks()
 
-    #canvas.greenbox = canvas.create_rectangle(0, 0, 760, 500, fill="green")
-    global running
-    if running:
-        running = False
-        start['state'] = 'normal'
-        stop['state'] = 'disabled'
-        Reset['state'] = 'normal'
+    
+        global running
+        if running:
+            running = False
+            start['state'] = 'normal'
+            stop['state'] = 'disabled'
+            Reset['state'] = 'normal'
+        else:
+            print("The timer was not running")
     else:
-        print("The timer was not running")
+        return 
 
 
 canvas.focus_set()
