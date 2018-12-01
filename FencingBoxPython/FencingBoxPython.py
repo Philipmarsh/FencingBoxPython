@@ -27,7 +27,7 @@ menubar.add_cascade(label="File", menu=menu1)
 window.config(menu=menubar)
 
 #This section describes how the box actually works
-
+#This needs to be fixed to allow the box to reinitialize each colour after a hit has been scored
 def double_search_red():
 
    timer1 = time.time()
