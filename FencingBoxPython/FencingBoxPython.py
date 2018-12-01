@@ -27,9 +27,9 @@ menubar.add_cascade(label="File", menu=menu1)
 window.config(menu=menubar)
 
 #This section describes how the box actually works
-#This needs to be fixed to allow the box to reinitialize each colour after a hit has been scored
 def set_g():
     canvas.bind('<g>', green)
+
 def double_search_red():
 
    timer1 = time.time()
@@ -149,7 +149,7 @@ running = False
 
 def counter_label(label):
     def count():
-
+        rangelist = [0,1,2,3,4,5,6,7,8,9]
         global counter
         counter1 = counter / 60
         counter2 = counter % 60
@@ -160,25 +160,17 @@ def counter_label(label):
                 stop['state'] = 'disabled'
                 Reset['state'] = 'normal'
                 winsound.Beep(5000, 1000)
-            elif counter2 == 0 or counter2 == 1 or counter2 ==2 or counter2 == 3 or counter2 ==4 or counter2== 5 or counter2==6 or counter2==7 or counter2==8 or counter2==9:
+            elif counter2 in rangelist :
                 display = str(int(counter1)) + ":" + "0" + str(int(counter2))
-                label['text'] = display  # Or label.config(text=display)
+                label['text'] = display  
                 label.after(1000, count)
                 counter -= 1
             else:
                 display = str(int(counter1)) + ":" + str(int(counter2))
-                label['text'] = display  # Or label.config(text=display)
+                label['text'] = display  
                 label.after(1000, count)
                 counter -= 1
-        # label.after(arg1, arg2) delays by
-
-    # first argument given in milliseconds
-    # and then calls the function given as second argument.
-    # Generally like here we need to call the
-    # function in which it is present repeatedly.
-    # Delays by 1000ms=1 seconds and call count again.
-
-    # Triggering the start of the counter.
+        
     count()
 
 
@@ -206,7 +198,7 @@ def reset(label):
     global counter
     counter = 180
 
-    # If rest is pressed after pressing stop.
+    # If reset is pressed after pressing stop.
     if running == False:
         Reset['state'] = 'disabled'
         label['text'] = '3:00'
@@ -250,9 +242,7 @@ def green_score_down():
 green_score_up_button = Button(window, text='˄', width=15,command=green_score_up)
 green_score_down_button = Button(window, text='˅', width=15, command=green_score_down)
 green_score_label = Label(window, text= str(green_score))
-#green_score_up_button.pack(side=LEFT)
-#green_score_label.pack(side=LEFT)
-#green_score_down_button.pack(side=LEFT)
+
 
 def red_score_up():
     global red_score
