@@ -28,6 +28,8 @@ window.config(menu=menubar)
 
 #This section describes how the box actually works
 #This needs to be fixed to allow the box to reinitialize each colour after a hit has been scored
+def set_g():
+    canvas.bind('<g>', green)
 def double_search_red():
 
    timer1 = time.time()
@@ -35,54 +37,46 @@ def double_search_red():
        nonlocal timer1
        timer2 = time.time()
        time_elapsed = timer2 - timer1
+       
        if time_elapsed <= 0.125:
            print(time_elapsed)
            window.greenbox = canvas.create_rectangle(0, 0, 760, 500, fill="green")
            window.update_idletasks()
-           winsound.Beep(5000, 1000)
            canvas.after(1000, canvas.delete(window.greenbox))
            canvas.bind('<g>', green)
-       else:
-           print('above limit')
-           canvas.bind('<g>', green)
-
+       
+   canvas.after(1000, set_g) 
    canvas.bind('<g>', greenhit)
 def set_r():
     canvas.bind('<r>', red)
 def double_search_green():
-   i = 0
+   #i = 0
    timer1 = time.time()
 
-   def counter():
-       def num():
-           nonlocal i
-           i +=1
+   #def counter():
+   #   def num():
+   #        nonlocal i
+   #        i +=1
 
-       nonlocal i
-       while i <126:
-           canvas.after(1, num)
-           print(i)
+   #    nonlocal i
+   #    while i <126:
+   #        canvas.after(1, num)
+   #        print(i)
 
    def redhit(r):
        nonlocal timer1
        timer2 = time.time()
        time_elapsed = timer2 - timer1
-
-       if i == 126:
-           canvas.bind('<r>', red)
-       elif time_elapsed <= 0.125:
+       
+       
+       if time_elapsed <= 0.125:
            print(time_elapsed)
            window.redbox = canvas.create_rectangle(760, 0, 1520, 500, fill="red")
            window.update_idletasks()
            canvas.after(1000, canvas.delete(window.redbox))
            canvas.bind('<r>', red)
-       elif time_elapsed > 125:
-           print('above limit')
-           canvas.bind('<r>', red)
-       else:
-           canvas.after(1000, set_r)
-   t = threading.Thread(target=counter, name='thread1')
-   t.start()
+       
+   canvas.after(1000, set_r) 
    canvas.bind('<r>', redhit)
 
 
