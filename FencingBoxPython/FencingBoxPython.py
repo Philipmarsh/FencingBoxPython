@@ -3,9 +3,12 @@ from tkinter import *
 import threading
 import time
 
-
-
+#TODO make the full screen button functional(overide line to true) and make the escape button set it to false
+#Not as important is to allow doubles to keep going off if epees are continually pressed
+full_screen_bool = False
 window = Tk()
+window.overrideredirect(full_screen_bool)
+window.geometry("{0}x{1}+0+0".format(window.winfo_screenwidth(), window.winfo_screenheight()))
 window.title("Fencing Box")
 label = Label(window, text="3:00")
 label.pack()
@@ -14,6 +17,19 @@ line1 = canvas.create_line(760, 0, 760, 500)
 txt = canvas.create_text(330, 330, text="Green", font="Arial 16", fill="green")
 txt1 = canvas.create_text(1190, 330, text="Red", font="Arial 16", fill="red")
 canvas.pack()
+
+def not_full_screen(event):
+    global full_screen_bool
+    full_screen_bool = False
+    window.overrideredirect(full_screen_bool)
+
+def full_screen(event):
+    global full_screen_bool
+    full_screen_bool = True
+    window.overrideredirect(full_screen_bool)
+
+canvas.bind('<Escape>', not_full_screen)
+canvas.bind('f', full_screen)
 #To make the red and green lights not break the program, use the same logic for the grounding wires, ie bool 
 #to be true or false. then use an after function to allow the bool to change back and the button to be pressed again
 red_allowed = True
@@ -35,16 +51,6 @@ def reset_both():
     green_allowed = True
     red_allowed = True
     
-
-#def reset_red():
- #   global red_allowed
-  #  canvas.bind('<r>', red)
-   # canvas.delete(window.redbox)
-    #try:
-     # canvas.delete(window.greenbox)
-    #except: 
-     # print("doesnt exist")
-    #red_allowed = True
     
 
 #defining the grounding wires
@@ -83,14 +89,19 @@ menubar = Menu(window)
 
 menu1 = Menu(menubar, tearoff=0)
 menu1.add_command(label="Epee")
+menu1.add_command(label="Foil")
+menu1.add_command(label="Sabre")
+if full_screen_bool == False:
+    menu1.add_command(label="Enter Full Screen mode (f)")
+#elif full_screen_bool == True:
+#    menu1.add_command(label="Exit Full Screen mode (Esc)")
 menu1.add_separator()
 menu1.add_command(label="Quit")
 menubar.add_cascade(label="File", menu=menu1)
 window.config(menu=menubar)
 
 #This section describes how the box actually works
-def set_g():
-    canvas.bind('<g>', green)
+
 
 def double_search_red():
 
@@ -109,14 +120,11 @@ def double_search_red():
                print(time_elapsed)
                window.greenbox = canvas.create_rectangle(0, 0, 760, 500, fill="green")
                window.update_idletasks()
-               #canvas.after(1000, reset_green)
-               #canvas.bind('<g>', green)
+              
        else: return
        
-   canvas.after(1000, set_g) 
    canvas.bind('<g>', greenhit)
-def set_r():
-    canvas.bind('<r>', red)
+
 def double_search_green():
    
    timer1 = time.time()
@@ -137,12 +145,9 @@ def double_search_green():
                print(time_elapsed)
                window.redbox = canvas.create_rectangle(760, 0, 1520, 500, fill="red")
                window.update_idletasks()
-              # canvas.after(1000, reset_red)
-              # canvas.bind('<r>', red)
+              
        else: return
         
-       
-   canvas.after(1000, set_r) 
    canvas.bind('<r>', redhit)
 
 
