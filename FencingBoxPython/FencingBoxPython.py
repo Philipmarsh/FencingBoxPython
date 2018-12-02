@@ -19,23 +19,33 @@ canvas.pack()
 red_allowed = True
 green_allowed = True
 
-def reset_green():
+def reset_both():
     global green_allowed
-    canvas.delete(window.greenbox)
+    global red_allowed
+    canvas.bind('<g>', green)
+    canvas.bind('<r>', red)
+    try:
+      canvas.delete(window.greenbox)
+    except:
+      print('does not exist')
     try:
       canvas.delete(window.redbox)
     except: 
       print("doesnt exist")
     green_allowed = True
-
-def reset_red():
-    global red_allowed
-    canvas.delete(window.redbox)
-    try:
-      canvas.delete(window.greenbox)
-    except: 
-      print("doesnt exist")
     red_allowed = True
+    
+
+#def reset_red():
+ #   global red_allowed
+  #  canvas.bind('<r>', red)
+   # canvas.delete(window.redbox)
+    #try:
+     # canvas.delete(window.greenbox)
+    #except: 
+     # print("doesnt exist")
+    #red_allowed = True
+    
 
 #defining the grounding wires
 xgrounding = False
@@ -99,8 +109,8 @@ def double_search_red():
                print(time_elapsed)
                window.greenbox = canvas.create_rectangle(0, 0, 760, 500, fill="green")
                window.update_idletasks()
-               canvas.after(1000, reset_green)
-               canvas.bind('<g>', green)
+               #canvas.after(1000, reset_green)
+               #canvas.bind('<g>', green)
        else: return
        
    canvas.after(1000, set_g) 
@@ -127,8 +137,8 @@ def double_search_green():
                print(time_elapsed)
                window.redbox = canvas.create_rectangle(760, 0, 1520, 500, fill="red")
                window.update_idletasks()
-               canvas.after(1000, reset_red)
-               canvas.bind('<r>', red)
+              # canvas.after(1000, reset_red)
+              # canvas.bind('<r>', red)
        else: return
         
        
@@ -150,7 +160,7 @@ def red(event):
         touche = event.keysym
         print(touche)
         winsound.Beep(5000, 1000)
-        canvas.after(1000, reset_red)
+        canvas.after(1000, reset_both)
     if zgrounding == False and red_allowed == True:
         red_allowed = False
         t = threading.Thread(target=double_search_red, name='thread1')
@@ -184,7 +194,7 @@ def green(event):
         touche = event.keysym
         print(touche)
         winsound.Beep(5000, 1000)
-        canvas.after(1000, reset_green)
+        canvas.after(1000, reset_both)
     if xgrounding == False and green_allowed == True:
         green_allowed = False
         t2 = threading.Thread(target=double_search_green, name='thread1')
