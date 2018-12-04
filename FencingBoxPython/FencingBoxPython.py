@@ -3,7 +3,7 @@ from tkinter import *
 import threading
 import time
 
-#TODO make the full screen button functional(overide line to true) and make the escape button set it to false
+#TODO work out what the lockout time actually is
 #Not as important is to allow doubles to keep going off if epees are continually pressed
 full_screen_bool = False
 window = Tk()
@@ -105,17 +105,17 @@ window.config(menu=menubar)
 
 def double_search_red():
 
-   timer1 = time.time()
+   timer1 = time.perf_counter_ns()
    def greenhit(r):
        global xgrounding
        global green_allowed
        if xgrounding == False and green_allowed == True :
            green_allowed = False
            nonlocal timer1
-           timer2 = time.time()
+           timer2 = time.perf_counter_ns()
            time_elapsed = timer2 - timer1
        
-           if time_elapsed <= 0.125:
+           if time_elapsed <= 40000000:
                green_allowed = False
                print(time_elapsed)
                window.greenbox = canvas.create_rectangle(0, 0, 760, 500, fill="green")
@@ -127,7 +127,7 @@ def double_search_red():
 
 def double_search_green():
    
-   timer1 = time.time()
+   timer1 = time.perf_counter_ns()
 
   
 
@@ -137,14 +137,16 @@ def double_search_green():
        if zgrounding == False and red_allowed == True:
            red_allowed = False
            nonlocal timer1
-           timer2 = time.time()
+           timer2 = time.perf_counter_ns()
            time_elapsed = timer2 - timer1
        
        
-           if time_elapsed <= 0.125:
+           if time_elapsed <= 40000000:
                print(time_elapsed)
                window.redbox = canvas.create_rectangle(760, 0, 1520, 500, fill="red")
                window.update_idletasks()
+           
+
               
        else: return
         
