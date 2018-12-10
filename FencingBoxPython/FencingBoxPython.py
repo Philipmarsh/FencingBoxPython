@@ -38,8 +38,8 @@ green_allowed = True
 def reset_both():
     global green_allowed
     global red_allowed
-    canvas.bind('<g>', green)
-    canvas.bind('<r>', red)
+    canvas.bind('2', green)
+    canvas.bind('1', red)
     try:
       canvas.delete(window.greenbox)
     except:
@@ -115,7 +115,7 @@ def double_search_red():
            timer2 = time.perf_counter_ns()
            time_elapsed = timer2 - timer1
        
-           if time_elapsed <= 40000000:
+           if time_elapsed <= 80000000:
                green_allowed = False
                print(time_elapsed)
                window.greenbox = canvas.create_rectangle(0, 0, 760, 500, fill="green")
@@ -123,7 +123,7 @@ def double_search_red():
               
        else: return
        
-   canvas.bind('<g>', greenhit)
+   canvas.bind('2', greenhit)
 
 def double_search_green():
    
@@ -141,7 +141,7 @@ def double_search_green():
            time_elapsed = timer2 - timer1
        
        
-           if time_elapsed <= 40000000:
+           if time_elapsed <= 80000000:
                print(time_elapsed)
                window.redbox = canvas.create_rectangle(760, 0, 1520, 500, fill="red")
                window.update_idletasks()
@@ -150,7 +150,7 @@ def double_search_green():
               
        else: return
         
-   canvas.bind('<r>', redhit)
+   canvas.bind('1', redhit)
 
 
 
@@ -224,8 +224,8 @@ def green(event):
 
 
 canvas.focus_set()
-canvas.bind("<r>", red)
-canvas.bind("<g>", green)
+canvas.bind("1", red)
+canvas.bind("2", green)
 
 canvas.pack()
 
